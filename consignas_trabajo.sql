@@ -173,14 +173,17 @@ WHERE description LIKE '%dog%' or description LIKE '%cat%';
 15. Hay algún actor o actriz que no apareca en ninguna película en la tabla film_actor.
 */
 
-
-#film_actor: actor_id, film_id
-# film: film_id
-#actor: actor_id, firt_name, last_name
+-- left join porque quiero conservar todas las columnas de la tabla actor y solamente unir con las que coinciden de film_actor(actor_id)
 
 
-
-
+SELECT 
+actor.actor_id,
+actor.first_name, 
+actor.last_name
+FROM actor
+LEFT JOIN film_actor 
+ON actor.actor_id = film_actor.actor_id
+WHERE film_actor.actor_id IS NULL;
 
 
 /*
@@ -243,7 +246,8 @@ WHERE release_year BETWEEN 2005 AND 2010;
 
 
 /*
-23. Encuentra el nombre y apellido de los actores que no han actuado en ninguna película de la categoría "Horror". Utiliza una subconsulta para encontrar los actores que han actuado en películas de la categoría "Horror" y luego exclúyelos de la lista de actores.
+23. Encuentra el nombre y apellido de los actores que no han actuado en ninguna película de la categoría "Horror". 
+Utiliza una subconsulta para encontrar los actores que han actuado en películas de la categoría "Horror" y luego exclúyelos de la lista de actores.
 */
 
 
