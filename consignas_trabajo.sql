@@ -201,7 +201,22 @@ WHERE release_year BETWEEN 2005 AND 2010;
 17. Encuentra el título de todas las películas que son de la misma categoría que "Family".
 */
 
+-- unir las tablas para luego buscar la palabra family in category
 
+WITH union_table AS(
+	SELECT film.title,
+    film.film_id,
+    category.name AS category
+    FROM film
+    JOIN film_category
+    ON film.film_id = film_category.film_id
+    JOIN category
+    ON film_category.category_id = category.category_id
+)
+
+SELECT *
+FROM union_table
+WHERE category in ('Family');
 
 
 
@@ -209,15 +224,34 @@ WHERE release_year BETWEEN 2005 AND 2010;
 18. Muestra el nombre y apellido de los actores que aparecen en más de 10 películas.
 */
 
+-- juntar en una tabla nombres, con film_id, luego filtrar por mas de 10 peliculas
 
+WITH nombre_apellido AS(
+	SELECT DISTINCT(actor.first_name),
+	actor.last_name,
+	film_actor.film_id
+    FROM actor
+    JOIN film_actor
+    ON actor.actor_id = film_actor.actor_id
+    JOIN film
+    ON film_actor.film_id = film.film_id
+)
 
+SELECT *
+FROM nombre_apellido
+WHERE film_id > 10;
 
 
 /*
 19. Encuentra el título de todas las películas que son "R" y tienen una duración mayor a 2 horas en la tabla film.
 */
 
-
+SELECT title,
+rating AS classification,
+length AS duration
+FROM film
+WHERE length > 120 AND
+rating IN ('R');
 
 
 
@@ -226,6 +260,20 @@ WHERE release_year BETWEEN 2005 AND 2010;
 */
 
 
+WITH name_length AS (
+	SELECT category.name,
+    AVG(film.length) as average
+    FROM category
+    JOIN film_category
+    ON category.category_id = film_category.category_id
+    JOIN film
+    ON film_category.film_id = film.film_id
+    GROUP BY category.name
+)
+
+SELECT *
+from name_length
+WHERE average > 120;
 
 
 
@@ -238,7 +286,8 @@ WHERE release_year BETWEEN 2005 AND 2010;
 
 
 /*
-22. Encuentra el título de todas las películas que fueron alquiladas por más de 5 días. Utiliza una subconsulta para encontrar los rental_ids con una duración superior a 5 días y luego selecciona las películas correspondientes.
+22. Encuentra el título de todas las películas que fueron alquiladas por más de 5 días. 
+Utiliza una subconsulta para encontrar los rental_ids con una duración superior a 5 días y luego selecciona las películas correspondientes.
 */
 
 
