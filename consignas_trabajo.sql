@@ -57,9 +57,22 @@ FROM actor;
 */
 
 
+SELECT first_name,
+last_name
+FROM actor
+WHERE last_name IN ('Gibson');
+
+
 /*
 7. Encuentra los nombres de los actores que tengan un actor_id entre 10 y 20.
 */
+
+
+SELECT first_name,
+last_name,
+actor_id
+FROM actor
+WHERE actor_id BETWEEN 10 AND 20;
 
 
 /*
@@ -67,19 +80,46 @@ FROM actor;
 */
 
 
+SELECT title,
+rating
+FROM film
+WHERE NOT rating = 'R' AND NOT rating = 'PG-13';
+
 
 /*
 9. Encuentra la cantidad total de películas en cada clasificación de la tabla film y muestra la clasificación junto con el recuento.
 */
 
+
+SELECT rating, 
+COUNT(rating) AS TOTAL
+FROM film
+GROUP BY rating;
+
+
 /*
 10. Encuentra la cantidad total de películas alquiladas por cada cliente y muestra el ID del cliente, su nombre y apellido junto con la cantidad de películas alquiladas.
 */
+
+# customer: customer_id, first_name, last_name
+# rental: customer_id, 
+
+SELECT customer.customer_id, 
+customer.first_name,
+customer.last_name,
+COUNT(rental.customer_id) AS Total_films_rented
+FROM customer
+INNER JOIN rental
+USING(customer_id)
+GROUP BY customer_id;
 
 
 /*
 11. Encuentra la cantidad total de películas alquiladas por categoría y muestra el nombre de la categoría junto con el recuento de alquileres.
 */
+
+
+
 
 
 /*
