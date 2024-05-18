@@ -242,6 +242,7 @@ FROM nombre_apellido
 WHERE film_id > 10;
 
 
+
 /*
 19. Encuentra el título de todas las películas que son "R" y tienen una duración mayor a 2 horas en la tabla film.
 */
@@ -281,7 +282,16 @@ WHERE average > 120;
 21. Encuentra los actores que han actuado en al menos 5 películas y muestra el nombre del actor junto con la cantidad de películas en las que han actuado.
 */
 
-
+SELECT film_actor.actor_id,
+actor.first_name,
+actor.last_name,
+COUNT(film_actor.film_id) AS quantity_films
+FROM film_actor
+JOIN actor
+ON film_actor.actor_id = actor.actor_id
+WHERE film_actor.film_id >= 5
+GROUP BY film_actor.actor_id 
+ORDER BY quantity_films ASC;
 
 
 
@@ -289,6 +299,7 @@ WHERE average > 120;
 22. Encuentra el título de todas las películas que fueron alquiladas por más de 5 días. 
 Utiliza una subconsulta para encontrar los rental_ids con una duración superior a 5 días y luego selecciona las películas correspondientes.
 */
+
 
 
 
@@ -309,6 +320,21 @@ a 180 minutos en la tabla film.
 */
 
 
+WITH union_table AS (
+	SELECT film.title,
+    category.name,
+	film.length
+    FROM category
+    JOIN film_category
+    ON category.category_id = film_category.category_id
+    JOIN film
+    ON film_category.film_id = film.film_id
+    WHERE film.length > 180
+)
+
+SELECT *
+FROM union_table
+WHERE name IN ('Comedy');
 
 
 
@@ -318,5 +344,10 @@ La consulta debe mostrar el nombre y apellido de los actores y el número de pel
 */
 
 
-
+SELECT actor.first_name,
+actor.last_name,
+film_actor.film_id
+FROM actor
+JOIN film_actor
+ON actor.actor_id = film_actor.actor_id;
 
