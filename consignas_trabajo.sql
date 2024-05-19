@@ -301,7 +301,16 @@ Utiliza una subconsulta para encontrar los rental_ids con una duración superior
 */
 
 
-
+SELECT DISTINCT film.title, 
+subquery.quantity_days
+FROM film
+JOIN inventory ON film.film_id = inventory.film_id
+JOIN rental ON inventory.inventory_id = rental.inventory_id
+JOIN (
+    SELECT rental_id, DATEDIFF(return_date, rental_date) AS quantity_days
+    FROM rental
+    WHERE DATEDIFF(return_date, rental_date) > 5
+) subquery ON rental.rental_id = subquery.rental_id;
 
 
 
@@ -311,7 +320,22 @@ Utiliza una subconsulta para encontrar los actores que han actuado en películas
 */
 
 
+WITH nombre_categoria AS (
+	SELECT actor.first_name,
+    actor.last_name,
+    category.name
+    FROM category
+    JOIN film_category
+    ON category.category_id = film_category.category_id
+    JOIN film_actor
+    ON film_category.film_id = film_actor.film_id
+    JOIN actor
+    ON film_actor.actor_id = actor.actor_id
+)
 
+SELECT *
+FROM nombre_categoria
+WHERE name NOT IN ('Horror');
 
 
 /*
@@ -343,11 +367,28 @@ WHERE name IN ('Comedy');
 La consulta debe mostrar el nombre y apellido de los actores y el número de películas en las que han actuado juntos.
 */
 
+-- seleccionar los nombres de los actores
+-- primer actor
+SELECT a1.first_name AS first_name_1, 
+a1.last_name AS last_name_1,
+-- segundo actor
+a2.first_name AS first_name_2, 
+a2.last_name AS last_name_2,
+-- contar las peliculas que tienen en comun
+COUNT(fa1.film_id) AS films_together
+FROM actor a1
+-- unir las tablas de actor 1 con el actor 2
+-- fa1 y fa2 son alias de la tabla film_actor
+JOIN film_actor fa1 
+ON a1.actor_id = fa1.actor_id
+-- fa1.actor_id <> fa2.actor_id asegura que no sean los mismos actores los que se emparejen
+JOIN film_actor fa2 
+ON fa1.film_id = fa2.film_id AND fa1.actor_id <> fa2.actor_id
+JOIN actor a2 
+ON fa2.actor_id = a2.actor_id
+-- agupar por los id de los actores
+GROUP BY a1.actor_id, a2.actor_id
+-- ordenar de menor cantidad a mayor
+ORDER BY films_together ASC;
 
-SELECT actor.first_name,
-actor.last_name,
-film_actor.film_id
-FROM actor
-JOIN film_actor
-ON actor.actor_id = film_actor.actor_id;
 
