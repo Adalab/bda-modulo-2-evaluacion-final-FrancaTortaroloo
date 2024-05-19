@@ -237,6 +237,9 @@ WITH nombre_apellido AS(
     ON film_actor.film_id = film.film_id
 )
 
+
+-- filtrar los que estuvieron en mas de 10 peliculas
+
 SELECT *
 FROM nombre_apellido
 WHERE film_id > 10;
@@ -290,12 +293,16 @@ WHERE average > 120;
 SELECT film_actor.actor_id,
 actor.first_name,
 actor.last_name,
+-- contar la cantidad de peliculas
 COUNT(film_actor.film_id) AS quantity_films
 FROM film_actor
 JOIN actor
 ON film_actor.actor_id = actor.actor_id
+-- filtrar por los que esten en 5 o mas peliculas
 WHERE film_actor.film_id >= 5
+-- agrupar por id
 GROUP BY film_actor.actor_id 
+-- ordenar de menor a mayor cantidad
 ORDER BY quantity_films ASC;
 
 
@@ -305,12 +312,15 @@ ORDER BY quantity_films ASC;
 Utiliza una subconsulta para encontrar los rental_ids con una duración superior a 5 días y luego selecciona las películas correspondientes.
 */
 
+-- union de tablas
 
 SELECT DISTINCT film.title, 
 subquery.quantity_days
 FROM film
 JOIN inventory ON film.film_id = inventory.film_id
 JOIN rental ON inventory.inventory_id = rental.inventory_id
+
+-- filtrar cantidad de dias
 JOIN (
     SELECT rental_id, DATEDIFF(return_date, rental_date) AS quantity_days
     FROM rental
@@ -323,6 +333,8 @@ JOIN (
 23. Encuentra el nombre y apellido de los actores que no han actuado en ninguna película de la categoría "Horror". 
 Utiliza una subconsulta para encontrar los actores que han actuado en películas de la categoría "Horror" y luego exclúyelos de la lista de actores.
 */
+
+-- nombres de actores y de las categorias
 
 
 WITH nombre_categoria AS (
@@ -337,6 +349,8 @@ WITH nombre_categoria AS (
     JOIN actor
     ON film_actor.actor_id = actor.actor_id
 )
+
+-- quitar los que esten en categoria horror
 
 SELECT *
 FROM nombre_categoria
