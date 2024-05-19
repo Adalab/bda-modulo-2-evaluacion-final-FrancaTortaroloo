@@ -261,6 +261,8 @@ rating IN ('R');
 */
 
 
+-- unir columnas nombre de categoria con la duracion
+
 WITH name_length AS (
 	SELECT category.name,
     AVG(film.length) as average
@@ -271,6 +273,9 @@ WITH name_length AS (
     ON film_category.film_id = film.film_id
     GROUP BY category.name
 )
+
+
+-- filtrar por la duracion
 
 SELECT *
 from name_length
@@ -344,6 +349,8 @@ a 180 minutos en la tabla film.
 */
 
 
+-- filtrar por titulo y la duracion
+
 WITH union_table AS (
 	SELECT film.title,
     category.name,
@@ -355,6 +362,8 @@ WITH union_table AS (
     ON film_category.film_id = film.film_id
     WHERE film.length > 180
 )
+
+-- filtrar por la categoria comedia
 
 SELECT *
 FROM union_table
