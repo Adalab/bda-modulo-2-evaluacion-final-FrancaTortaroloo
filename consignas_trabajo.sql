@@ -102,14 +102,14 @@ GROUP BY rating;
 */
 
 
-SELECT customer.customer_id, 
+SELECT customer.customer_id,
 customer.first_name,
 customer.last_name,
 COUNT(rental.customer_id) AS Total_films_rented
 FROM customer
-INNER JOIN rental
-USING(customer_id)
-GROUP BY customer_id;
+JOIN rental
+ON customer.customer_id = rental.customer_id
+GROUP BY customer.customer_id;
 
 
 /*
