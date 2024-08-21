@@ -9,5 +9,5 @@
 
 
 
-## Las consignas se encuentran dentro del archivo junto con sus resoluciones
+## Las consignas se encuentran dentro del archivo 'consignas-trabajo.sql' junto con sus resoluciones
 
